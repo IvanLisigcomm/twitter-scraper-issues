@@ -28,6 +28,7 @@
 - 💼 市场调研
 
 ---
+<img width="2412" height="1094" alt="image" src="https://github.com/user-attachments/assets/fbecaeac-96ac-4285-85e2-812b8018f640" />
 
 ## ✨ 功能特性
 
