@@ -14,6 +14,7 @@
 </div>
 
 ---
+<img width="1916" height="928" alt="image" src="https://github.com/user-attachments/assets/6cbb1ec9-2767-44d4-8093-d4e5233b0265" />
 
 ## 📖 项目简介
 
@@ -105,6 +106,8 @@ python3 app.py
 就这么简单！🎉
 
 ---
+<img width="1496" height="1212" alt="image" src="https://github.com/user-attachments/assets/9d90f845-2885-4c97-a7b2-22e7db941d36" />
+<img width="1926" height="734" alt="image" src="https://github.com/user-attachments/assets/41128b26-2543-487e-860f-e6a13b8c1026" />
 
 ## 💻 使用方法
 
