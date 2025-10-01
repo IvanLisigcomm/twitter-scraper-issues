@@ -115,9 +115,8 @@ python3 app.py
 
 1. **访问首页**
    - 打开浏览器访问 `http://localhost:8887`
-   
+<img width="1448" height="1212" alt="image" src="https://github.com/user-attachments/assets/cb118766-53e0-419b-b9e7-1193dbb093a6" />   
 2. **填写参数**
-<img width="1448" height="1212" alt="image" src="https://github.com/user-attachments/assets/cb118766-53e0-419b-b9e7-1193dbb093a6" />
    - 用户名：输入 Twitter 用户名（不含 @ 符号）
    - 数量：设置爬取推文数量（1-1000）
    - 格式：选择保存格式（默认 CSV）
