@@ -73,7 +73,7 @@
 
 1. **克隆或下载项目**
 ```bash
-cd 推特爬虫
+cd twitter-scraper-issues
 ```
 
 2. **安装依赖**
