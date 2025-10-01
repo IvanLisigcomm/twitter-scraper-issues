@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter爬虫 - 现代化数据采集平台</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 背景动画 -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fab fa-twitter"></i>
+                <span>Twitter 数据采集平台</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">首页</a>
+                <a href="#features" class="nav-link">功能</a>
+                <a href="#history" class="nav-link">历史记录</a>
+                <a href="#about" class="nav-link">关于</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section id="home" class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">强大的Twitter数据采集</span>
+                        <br>就在您的指尖
+                    </h1>
+                    <p class="hero-subtitle">
+                        智能化爬虫 · 实时进度追踪 · 多格式导出 · 简单易用
+                    </p>
+                    <button class="cta-button" onclick="scrollToForm()">
+                        <span>立即开始</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="hero-image">
+                    <div class="floating-card card-1">
+                        <i class="fas fa-chart-line"></i>
+                        <span>实时分析</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>安全可靠</span>
+                    </div>
+                    <div class="floating-card card-3">
+                        <i class="fas fa-rocket"></i>
+                        <span>快速高效</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="features-section">
+                <h2 class="section-title">核心功能</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>智能爬取</h3>
+                        <p>模拟真实浏览行为，避免被检测，智能去重确保数据准确</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>实时追踪</h3>
+                        <p>实时显示爬取进度，可视化进度条，随时掌握任务状态</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                        <h3>多格式导出</h3>
+                        <p>支持JSON、CSV格式导出，完美兼容Excel和数据分析工具</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>历史记录</h3>
+                        <p>自动保存所有爬取记录，随时查看、预览和下载历史数据</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3>灵活配置</h3>
+                        <p>支持自定义爬取数量、无头模式等参数，满足不同需求</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>安全稳定</h3>
+                        <p>完善的错误处理机制，反检测措施，确保爬取过程稳定</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scraper Form Section -->
+            <section id="scraper" class="scraper-section">
+                <h2 class="section-title">开始爬取</h2>
+                
+                <div class="scraper-container">
+                    <!-- 配置表单 -->
+                    <div class="scraper-form" id="scraperForm">
+                        <div class="form-group">
+                            <label for="username">
+                                <i class="fas fa-user"></i>
+                                Twitter用户名
+                            </label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                placeholder="输入用户名（不含@符号）"
+                                required
+                            >
+                            <small>例如：elonmusk</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maxTweets">
+                                <i class="fas fa-hashtag"></i>
+                                爬取数量
+                            </label>
+                            <input 
+                                type="number" 
+                                id="maxTweets" 
+                                value="50" 
+                                min="1" 
+                                max="1000"
+                                required
+                            >
+                            <div class="range-labels">
+                                <span>1</span>
+                                <span>推文数量</span>
+                                <span>1000</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="saveFormat">
+                                <i class="fas fa-file"></i>
+                                保存格式
+                            </label>
+                            <select id="saveFormat">
+                                <option value="json">JSON</option>
+                                <option value="csv" selected>CSV</option>
+                                <option value="both">两种格式</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="headless" checked>
+                                <span class="checkbox-custom"></span>
+                                <span>无头模式（后台运行，不显示浏览器）</span>
+                            </label>
+                        </div>
+
+                        <button class="submit-button" onclick="startScraping()">
+                            <i class="fas fa-play"></i>
+                            <span>开始爬取</span>
+                        </button>
+                    </div>
+
+                    <!-- 进度显示 -->
+                    <div class="progress-container" id="progressContainer" style="display: none;">
+                        <div class="progress-header">
+                            <h3 id="progressTitle">正在爬取 @<span id="currentUsername"></span></h3>
+                            <span class="progress-status" id="progressStatus">初始化中...</span>
+                        </div>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar">
+                                <span class="progress-text" id="progressText">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="progress-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>已爬取</span>
+                                <strong id="currentTweets">0</strong>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-target"></i>
+                                <span>目标</span>
+                                <strong id="targetTweets">0</strong>
+                            </div>
+                        </div>
+
+                        <div class="status-message" id="statusMessage">
+                            <i class="fas fa-info-circle"></i>
+                            <span>准备中...</span>
+                        </div>
+
+                        <!-- 完成后的操作按钮 -->
+                        <div class="action-buttons" id="actionButtons" style="display: none;">
+                            <button class="action-btn preview-btn" onclick="previewData()">
+                                <i class="fas fa-eye"></i>
+                                预览数据
+                            </button>
+                            <button class="action-btn download-btn" onclick="downloadFiles()">
+                                <i class="fas fa-download"></i>
+                                下载文件
+                            </button>
+                            <button class="action-btn new-btn" onclick="resetForm()">
+                                <i class="fas fa-plus"></i>
+                                新建任务
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section id="history" class="history-section">
+                <h2 class="section-title">历史记录</h2>
+                
+                <div class="history-controls">
+                    <button class="refresh-btn" onclick="loadHistory()">
+                        <i class="fas fa-sync-alt"></i>
+                        刷新
+                    </button>
+                </div>
+
+                <div class="history-list" id="historyList">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载中...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="about-section">
+                <h2 class="section-title">关于项目</h2>
+                <div class="about-content">
+                    <div class="about-card">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>项目说明</h3>
+                        <p>这是一个模拟人工浏览行为的Twitter推文爬虫程序，采用现代化Web界面，提供简单直观的操作体验。</p>
+                    </div>
+                    <div class="about-card">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>使用须知</h3>
+                        <p>本工具仅供学习研究使用，请遵守Twitter平台服务条款，合理控制爬取频率，尊重数据隐私。</p>
+                    </div>
+                    <div class="about-card">
+                        <i class="fas fa-code"></i>
+                        <h3>技术栈</h3>
+                        <p>后端：Python + Flask + Selenium<br>前端：HTML5 + CSS3 + JavaScript<br>自动化：ChromeDriver + BeautifulSoup</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Twitter爬虫平台. 仅供学习研究使用.</p>
+        </div>
+    </footer>
+
+    <!-- 数据预览模态框 -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>数据预览</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- 预览内容将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
+
