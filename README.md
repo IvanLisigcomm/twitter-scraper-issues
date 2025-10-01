@@ -28,7 +28,6 @@
 - 💼 市场调研
 
 ---
-<img width="2412" height="1094" alt="image" src="https://github.com/user-attachments/assets/fbecaeac-96ac-4285-85e2-812b8018f640" />
 
 ## ✨ 功能特性
 
@@ -73,7 +72,7 @@
 
 1. **克隆或下载项目**
 ```bash
-cd twitter-scraper-issues
+cd 推特爬虫
 ```
 
 2. **安装依赖**
@@ -115,18 +114,18 @@ python3 app.py
 
 1. **访问首页**
    - 打开浏览器访问 `http://localhost:8887`
-<img width="1448" height="1212" alt="image" src="https://github.com/user-attachments/assets/cb118766-53e0-419b-b9e7-1193dbb093a6" />   
+   
 2. **填写参数**
    - 用户名：输入 Twitter 用户名（不含 @ 符号）
    - 数量：设置爬取推文数量（1-1000）
    - 格式：选择保存格式（默认 CSV）
    - 无头模式：勾选后浏览器后台运行
 
-4. **开始爬取**
+3. **开始爬取**
    - 点击"开始爬取"按钮
    - 实时查看进度和状态
 
-5. **查看结果**
+4. **查看结果**
    - 点击"预览数据"在线查看（支持 CSV 和 JSON）
    - 点击"下载文件"保存到本地
    - 在"历史记录"中管理所有文件
