@@ -13,7 +13,7 @@ DEFAULT_CONFIG = {
     'headless': False,
     'delay_range': (2, 5),
     'save_format': 'csv',
-    'output_directory': './output',
+    'output_directory': './data',
     'window_size': (1920, 1080),
     'scroll_attempts': 10,
     'page_load_timeout': 20

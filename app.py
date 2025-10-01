@@ -20,6 +20,8 @@ CORS(app)
 # 全局变量用于追踪爬取状态
 scraping_status = {
     'is_running': False,
+    'is_paused': False,
+    'is_cancelled': False,
     'progress': 0,
     'current_tweets': 0,
     'target_tweets': 0,
@@ -35,6 +37,8 @@ def background_scraper(username, max_tweets, headless, save_format):
     
     try:
         scraping_status['is_running'] = True
+        scraping_status['is_paused'] = False
+        scraping_status['is_cancelled'] = False
         scraping_status['progress'] = 0
         scraping_status['current_tweets'] = 0
         scraping_status['target_tweets'] = max_tweets
@@ -43,9 +47,6 @@ def background_scraper(username, max_tweets, headless, save_format):
         scraping_status['error'] = None
         scraping_status['output_files'] = []
         
-        # 创建爬虫实例
-        scraper = TwitterScraper(headless=headless)
-        
         # 自定义进度回调
         def update_progress(current, total, message):
             scraping_status['current_tweets'] = current
@@ -53,12 +54,24 @@ def background_scraper(username, max_tweets, headless, save_format):
             scraping_status['progress'] = int((current / total) * 100) if total > 0 else 0
             scraping_status['status_message'] = message
         
+        # 控制检查函数
+        def check_control():
+            """返回 (is_paused, is_cancelled)"""
+            return scraping_status['is_paused'], scraping_status['is_cancelled']
+        
+        # 创建爬虫实例，传入进度回调和控制检查函数
+        scraper = TwitterScraper(headless=headless, progress_callback=update_progress, control_callback=check_control)
+        
         scraping_status['status_message'] = '正在爬取推文...'
         
         # 爬取推文
         tweets = scraper.scrape_user_tweets(username, max_tweets)
         
-        if tweets:
+        # 检查是否被取消
+        if scraping_status['is_cancelled']:
+            scraping_status['error'] = '任务已取消'
+            scraping_status['status_message'] = '任务已取消'
+        elif tweets:
             scraping_status['status_message'] = '正在保存数据...'
             scraping_status['current_tweets'] = len(tweets)
             scraping_status['progress'] = 100
@@ -127,6 +140,54 @@ def start_scraping():
 def get_status():
     """获取爬取状态API"""
     return jsonify(scraping_status)
+
+
+@app.route('/api/pause', methods=['POST'])
+def pause_scraping():
+    """暂停爬取API"""
+    global scraping_status
+    
+    if not scraping_status['is_running']:
+        return jsonify({'error': '没有正在运行的任务'}), 400
+    
+    if scraping_status['is_paused']:
+        return jsonify({'error': '任务已经处于暂停状态'}), 400
+    
+    scraping_status['is_paused'] = True
+    scraping_status['status_message'] = '已暂停'
+    
+    return jsonify({'message': '已暂停爬取', 'status': 'paused'})
+
+
+@app.route('/api/resume', methods=['POST'])
+def resume_scraping():
+    """恢复爬取API"""
+    global scraping_status
+    
+    if not scraping_status['is_running']:
+        return jsonify({'error': '没有正在运行的任务'}), 400
+    
+    if not scraping_status['is_paused']:
+        return jsonify({'error': '任务未处于暂停状态'}), 400
+    
+    scraping_status['is_paused'] = False
+    scraping_status['status_message'] = '继续爬取中...'
+    
+    return jsonify({'message': '已恢复爬取', 'status': 'running'})
+
+
+@app.route('/api/cancel', methods=['POST'])
+def cancel_scraping():
+    """取消爬取API"""
+    global scraping_status
+    
+    if not scraping_status['is_running']:
+        return jsonify({'error': '没有正在运行的任务'}), 400
+    
+    scraping_status['is_cancelled'] = True
+    scraping_status['status_message'] = '正在取消任务...'
+    
+    return jsonify({'message': '已发送取消信号', 'status': 'cancelling'})
 
 
 @app.route('/api/download/<filename>')

@@ -595,6 +595,60 @@ section {
     color: var(--primary);
 }
 
+/* 控制按钮 */
+.control-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.control-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: var(--transition);
+    font-size: 15px;
+}
+
+.pause-btn {
+    background: rgba(255, 173, 31, 0.2);
+    color: var(--warning);
+    border: 2px solid var(--warning);
+}
+
+.pause-btn:hover {
+    background: rgba(255, 173, 31, 0.3);
+    transform: translateY(-2px);
+}
+
+.pause-btn.paused {
+    background: rgba(23, 191, 99, 0.2);
+    color: var(--success);
+    border: 2px solid var(--success);
+}
+
+.pause-btn.paused i::before {
+    content: "\f04b"; /* play icon */
+}
+
+.cancel-btn {
+    background: rgba(249, 24, 128, 0.2);
+    color: var(--error);
+    border: 2px solid var(--error);
+}
+
+.cancel-btn:hover {
+    background: rgba(249, 24, 128, 0.3);
+    transform: translateY(-2px);
+}
+
 .action-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

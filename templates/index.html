@@ -213,6 +213,18 @@
                             <span>准备中...</span>
                         </div>
 
+                        <!-- 控制按钮（爬取过程中显示） -->
+                        <div class="control-buttons" id="controlButtons" style="display: none;">
+                            <button class="control-btn pause-btn" id="pauseBtn" onclick="togglePause()">
+                                <i class="fas fa-pause"></i>
+                                <span>暂停</span>
+                            </button>
+                            <button class="control-btn cancel-btn" onclick="cancelScraping()">
+                                <i class="fas fa-stop"></i>
+                                <span>取消</span>
+                            </button>
+                        </div>
+
                         <!-- 完成后的操作按钮 -->
                         <div class="action-buttons" id="actionButtons" style="display: none;">
                             <button class="action-btn preview-btn" onclick="previewData()">

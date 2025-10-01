@@ -1,6 +1,7 @@
 // ========== 全局变量 ==========
 let statusCheckInterval = null;
 let currentFiles = [];
+let isPaused = false;
 
 // ========== 初始化 ==========
 document.addEventListener('DOMContentLoaded', function() {
@@ -78,6 +79,12 @@ async function startScraping() {
     document.getElementById('progressContainer').style.display = 'block';
     document.getElementById('currentUsername').textContent = username;
     
+    // 重置暂停状态
+    isPaused = false;
+    const pauseBtn = document.getElementById('pauseBtn');
+    pauseBtn.classList.remove('paused');
+    pauseBtn.querySelector('span').textContent = '暂停';
+    
     try {
         const response = await fetch('/api/scrape', {
             method: 'POST',
@@ -95,6 +102,8 @@ async function startScraping() {
         const data = await response.json();
         
         if (response.ok) {
+            // 显示控制按钮
+            document.getElementById('controlButtons').style.display = 'flex';
             // 开始轮询状态
             startStatusPolling();
         } else {
@@ -124,6 +133,9 @@ function startStatusPolling() {
             if (!status.is_running) {
                 clearInterval(statusCheckInterval);
                 statusCheckInterval = null;
+                
+                // 隐藏控制按钮
+                document.getElementById('controlButtons').style.display = 'none';
                 
                 if (status.error) {
                     showNotification('爬取失败: ' + status.error, 'error');
@@ -178,11 +190,69 @@ function updateProgress(status) {
     }
 }
 
+// ========== 暂停/恢复爬取 ==========
+async function togglePause() {
+    try {
+        const endpoint = isPaused ? '/api/resume' : '/api/pause';
+        const response = await fetch(endpoint, { method: 'POST' });
+        const data = await response.json();
+        
+        if (response.ok) {
+            isPaused = !isPaused;
+            const pauseBtn = document.getElementById('pauseBtn');
+            
+            if (isPaused) {
+                pauseBtn.classList.add('paused');
+                pauseBtn.querySelector('span').textContent = '继续';
+                showNotification('已暂停爬取', 'info');
+            } else {
+                pauseBtn.classList.remove('paused');
+                pauseBtn.querySelector('span').textContent = '暂停';
+                showNotification('继续爬取中...', 'success');
+            }
+        } else {
+            showNotification(data.error || '操作失败', 'error');
+        }
+    } catch (error) {
+        showNotification('网络错误: ' + error.message, 'error');
+    }
+}
+
+// ========== 取消爬取 ==========
+async function cancelScraping() {
+    if (!confirm('确定要取消当前爬取任务吗？已爬取的数据不会保存。')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/cancel', { method: 'POST' });
+        const data = await response.json();
+        
+        if (response.ok) {
+            showNotification('已取消爬取任务', 'info');
+            // 停止轮询
+            if (statusCheckInterval) {
+                clearInterval(statusCheckInterval);
+                statusCheckInterval = null;
+            }
+            // 稍等一下再重置表单，让用户看到取消消息
+            setTimeout(() => {
+                resetForm();
+            }, 1000);
+        } else {
+            showNotification(data.error || '取消失败', 'error');
+        }
+    } catch (error) {
+        showNotification('网络错误: ' + error.message, 'error');
+    }
+}
+
 // ========== 重置表单 ==========
 function resetForm() {
     document.getElementById('scraperForm').style.display = 'block';
     document.getElementById('progressContainer').style.display = 'none';
     document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('controlButtons').style.display = 'none';
     
     // 重置进度
     document.getElementById('progressBar').style.width = '0%';
@@ -190,6 +260,8 @@ function resetForm() {
     document.getElementById('currentTweets').textContent = '0';
     document.getElementById('targetTweets').textContent = '0';
     
+    // 重置状态
+    isPaused = false;
     currentFiles = [];
     
     if (statusCheckInterval) {

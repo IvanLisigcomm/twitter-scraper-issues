@@ -29,19 +29,23 @@ from bs4 import BeautifulSoup
 class TwitterScraper:
     """X（推特）推文爬虫类"""
     
-    def __init__(self, headless: bool = False, delay_range: tuple = (2, 5)):
+    def __init__(self, headless: bool = False, delay_range: tuple = (2, 5), progress_callback=None, control_callback=None):
         """
         初始化爬虫
         
         Args:
             headless: 是否使用无头模式
             delay_range: 随机延迟范围（秒）
+            progress_callback: 进度回调函数，接受 (current, total, message) 参数
+            control_callback: 控制回调函数，返回 (is_paused, is_cancelled) 元组
         """
         self.headless = headless
         self.delay_range = delay_range
         self.driver = None
         self.tweets_data = []
         self.username = None  # 保存当前爬取的用户名
+        self.progress_callback = progress_callback  # 保存进度回调函数
+        self.control_callback = control_callback  # 保存控制回调函数
         
         # 创建 data 目录
         self.data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
@@ -304,6 +308,10 @@ class TwitterScraper:
                 EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweet"]'))
             )
             
+            # 初始化进度
+            if self.progress_callback:
+                self.progress_callback(0, max_tweets, "页面加载完成，开始爬取推文...")
+            
             tweets_collected = 0
             scroll_attempts = 0
             max_scroll_attempts = 20  # 增加滚动次数
@@ -313,6 +321,28 @@ class TwitterScraper:
             seen_tweets = set()
             
             while tweets_collected < max_tweets and scroll_attempts < max_scroll_attempts:
+                # 检查控制标志（暂停/取消）
+                if self.control_callback:
+                    is_paused, is_cancelled = self.control_callback()
+                    
+                    # 如果被取消，立即退出
+                    if is_cancelled:
+                        print("\n❌ 爬取任务已被取消")
+                        break
+                    
+                    # 如果被暂停，等待恢复
+                    while is_paused:
+                        print("⏸️  任务已暂停，等待恢复...")
+                        time.sleep(1)
+                        is_paused, is_cancelled = self.control_callback()
+                        if is_cancelled:
+                            print("\n❌ 爬取任务已被取消")
+                            break
+                    
+                    # 如果在暂停期间被取消，退出
+                    if is_cancelled:
+                        break
+                
                 print(f"\n=== 第 {scroll_attempts + 1} 轮爬取 ===")
                 print(f"已收集 {tweets_collected}/{max_tweets} 条推文")
                 
@@ -338,6 +368,10 @@ class TwitterScraper:
                             tweets_collected += 1
                             new_tweets_in_this_scroll += 1
                             print(f"  ✓ 新推文 #{tweets_collected}: {tweet_data['text'][:50]}...")
+                            
+                            # 更新进度
+                            if self.progress_callback:
+                                self.progress_callback(tweets_collected, max_tweets, f"正在爬取推文...已收集 {tweets_collected}/{max_tweets} 条")
                 
                 print(f"→ 本轮收集到 {new_tweets_in_this_scroll} 条新推文")
                 
@@ -358,6 +392,9 @@ class TwitterScraper:
                 
                 # 滚动加载更多
                 print("\n📜 开始滚动加载更多推文...")
+                if self.progress_callback:
+                    self.progress_callback(tweets_collected, max_tweets, f"正在滚动页面加载更多推文...已收集 {tweets_collected}/{max_tweets} 条")
+                
                 prev_elements_count = len(tweet_elements)
                 self.scroll_page(3)
                 scroll_attempts += 1
